@@ -1,0 +1,9 @@
+{
+  "model_architecture": "MobileNetV3-Large (Field-Tuned Edge Backbone)",
+  "datasets": "PlantVillage + PlantDoc Joint Co-Training",
+  "clean_lab_top1_acc": 94.47,
+  "clean_lab_top5_acc": 99.87,
+  "real_field_top1_acc": 61.04,
+  "real_field_top5_acc": 95.24,
+  "weights_path": "models/crop_disease_mobilenetv3_field_tuned.pth"
+}
