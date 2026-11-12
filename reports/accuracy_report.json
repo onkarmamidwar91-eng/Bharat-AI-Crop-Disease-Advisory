@@ -1,0 +1,55 @@
+{
+  "model_architecture": "MobileNetV3-Small (Edge Optimized)",
+  "target_platform": "Arm Cortex-A76 / Raspberry Pi 5 / Android",
+  "dataset": "PlantVillage (Augmented Color Dataset)",
+  "total_classes": 38,
+  "total_training_samples": 3040,
+  "total_validation_samples": 760,
+  "training_time_minutes": 9.48,
+  "best_validation_top1_accuracy": 95.53,
+  "best_validation_top5_accuracy": 99.87,
+  "precision_macro": 95.81,
+  "recall_macro": 95.53,
+  "f1_score_macro": 95.49,
+  "precision_weighted": 95.81,
+  "recall_weighted": 95.53,
+  "f1_score_weighted": 95.49,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.4843981742858887,
+      "train_acc": 0.6634868421052632,
+      "val_loss": 1.232898725961384,
+      "val_top1_acc": 0.718421052631579,
+      "val_top5_acc": 0.9592105263157895,
+      "duration_sec": 153.55662298202515
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.7322792787300912,
+      "train_acc": 0.906578947368421,
+      "val_loss": 0.8279129040868659,
+      "val_top1_acc": 0.8710526315789474,
+      "val_top5_acc": 0.9894736842105263,
+      "duration_sec": 129.93763756752014
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.6026278649505816,
+      "train_acc": 0.9444078947368421,
+      "val_loss": 0.600319632730986,
+      "val_top1_acc": 0.9434210526315789,
+      "val_top5_acc": 0.9973684210526316,
+      "duration_sec": 138.1297824382782
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5320445208173049,
+      "train_acc": 0.9736842105263158,
+      "val_loss": 0.5614791261522394,
+      "val_top1_acc": 0.9552631578947368,
+      "val_top5_acc": 0.9986842105263158,
+      "duration_sec": 147.27655339241028
+    }
+  ]
+}

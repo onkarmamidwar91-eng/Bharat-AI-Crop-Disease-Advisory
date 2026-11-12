@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch checkpoints and cache
+.cache/
+checkpoints/
+*.pth.tar
+
+# Data files (do not commit raw 50k+ images)
+data/
+*.zip
+*.tar.gz
+
+# OS generated files
+.DS_Store
+Thumbs.db
