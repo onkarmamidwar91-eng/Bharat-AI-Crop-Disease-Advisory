@@ -4,11 +4,8 @@ import json
 import time
 from PIL import Image
 import torch
-from torchvision import transforms
-
-# Ensure project modules are importable
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from model import build_edge_model
+import torch.nn as nn
+from torchvision import transforms, models
 
 PLANTDOC_TO_PLANTVILLAGE = {
     "Apple Scab Leaf": "Apple___Apple_scab",
@@ -49,12 +46,12 @@ def is_healthy(cls_name):
 
 def evaluate_plantdoc():
     print("=" * 65)
-    print("🌿 Testing Trained Edge Model on Real Field Dataset: PlantDoc")
-    print("📂 Dataset source: https://github.com/pratikkayal/PlantDoc-Dataset")
+    print("🌿 Testing Field-Tuned Model on PlantDoc (Real Field Conditions)")
+    print("📂 Source: https://github.com/pratikkayal/PlantDoc-Dataset")
     print("=" * 65)
 
     base_dir = r"D:\Bharat-AI-Crop-Disease-Advisory"
-    model_path = os.path.join(base_dir, "models", "crop_disease_mobilenetv3.pth")
+    model_path = os.path.join(base_dir, "models", "crop_disease_mobilenetv3_field_tuned.pth")
     classes_path = os.path.join(base_dir, "models", "classes.json")
     reports_dir = os.path.join(base_dir, "reports")
 
@@ -64,9 +61,14 @@ def evaluate_plantdoc():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     torch.set_num_threads(os.cpu_count() or 4)
-    print(f"Loading MobileNetV3-Small on {device} (threads={os.cpu_count()})...")
+    print(f"Loading MobileNetV3-Large (Field-Tuned) on {device} (threads={os.cpu_count()})...")
 
-    model = build_edge_model(num_classes=len(classes), pretrained=False)
+    model = models.mobilenet_v3_large(weights=None)
+    in_feat = model.classifier[3].in_features
+    model.classifier[3] = nn.Sequential(
+        nn.Dropout(p=0.3),
+        nn.Linear(in_feat, len(classes))
+    )
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.to(device)
     model.eval()
@@ -81,15 +83,14 @@ def evaluate_plantdoc():
     plantdoc_root = r"D:\PlantDoc-Dataset"
     splits = ["test", "train"]
 
-    total_images = 0
-    corrupt_images = 0
-    top1_correct = 0
-    top5_correct = 0
-    crop_correct = 0
-    health_correct = 0
+    split_results = {}
+    overall_total = 0
+    overall_top1 = 0
+    overall_top5 = 0
+    overall_crop = 0
+    overall_health = 0
 
     per_class_stats = {}
-
     start_time = time.time()
 
     for split in splits:
@@ -98,6 +99,12 @@ def evaluate_plantdoc():
             continue
 
         print(f"\nEvaluating split: '{split}'...")
+        split_total = 0
+        split_top1 = 0
+        split_top5 = 0
+        split_crop = 0
+        split_health = 0
+
         for folder_name in sorted(os.listdir(split_dir)):
             folder_path = os.path.join(split_dir, folder_name)
             if not os.path.isdir(folder_path):
@@ -122,7 +129,6 @@ def evaluate_plantdoc():
                         img = img.convert("RGB")
                         tensor = val_transform(img).unsqueeze(0).to(device)
                 except Exception:
-                    corrupt_images += 1
                     continue
 
                 with torch.no_grad():
@@ -137,22 +143,21 @@ def evaluate_plantdoc():
                 pred_crop = get_crop_from_class(pred_class)
                 pred_is_healthy = is_healthy(pred_class)
 
-                # Metrics
                 is_top1 = (top1_idx == target_idx)
                 is_top5 = (target_idx in top5_indices)
                 is_crop_ok = (pred_crop in target_crop or target_crop in pred_crop)
                 is_health_ok = (pred_is_healthy == target_is_healthy)
 
                 if is_top1:
-                    top1_correct += 1
+                    split_top1 += 1
                 if is_top5:
-                    top5_correct += 1
+                    split_top5 += 1
                 if is_crop_ok:
-                    crop_correct += 1
+                    split_crop += 1
                 if is_health_ok:
-                    health_correct += 1
+                    split_health += 1
 
-                total_images += 1
+                split_total += 1
                 per_class_stats[folder_name]["total"] += 1
                 if is_top1:
                     per_class_stats[folder_name]["top1"] += 1
@@ -161,49 +166,56 @@ def evaluate_plantdoc():
                 if is_crop_ok:
                     per_class_stats[folder_name]["crop_ok"] += 1
 
-                if total_images % 300 == 0:
-                    print(f"  Processed {total_images} images | Current Top-1: {top1_correct/total_images*100:.2f}% | Top-5: {top5_correct/total_images*100:.2f}%", flush=True)
+        acc1 = (split_top1 / split_total) * 100 if split_total else 0.0
+        acc5 = (split_top5 / split_total) * 100 if split_total else 0.0
+        split_results[split] = {
+            "total": split_total,
+            "top1_acc": round(acc1, 2),
+            "top5_acc": round(acc5, 2),
+            "crop_acc": round((split_crop / split_total) * 100, 2) if split_total else 0,
+            "health_acc": round((split_health / split_total) * 100, 2) if split_total else 0
+        }
+        print(f"  Split '{split}' ({split_total} images): Top-1 = {acc1:.2f}% | Top-5 = {acc5:.2f}%")
+
+        overall_total += split_total
+        overall_top1 += split_top1
+        overall_top5 += split_top5
+        overall_crop += split_crop
+        overall_health += split_health
 
     elapsed = time.time() - start_time
-
-    top1_acc = (top1_correct / total_images) * 100 if total_images else 0.0
-    top5_acc = (top5_correct / total_images) * 100 if total_images else 0.0
-    crop_acc = (crop_correct / total_images) * 100 if total_images else 0.0
-    health_acc = (health_correct / total_images) * 100 if total_images else 0.0
+    ov_acc1 = (overall_top1 / overall_total) * 100 if overall_total else 0.0
+    ov_acc5 = (overall_top5 / overall_total) * 100 if overall_total else 0.0
+    ov_crop = (overall_crop / overall_total) * 100 if overall_total else 0.0
+    ov_health = (overall_health / overall_total) * 100 if overall_total else 0.0
 
     print("\n" + "=" * 65)
-    print("🏆 FINAL PLANTDOC EVALUATION BENCHMARK RESULTS")
+    print("🏆 IMPROVED FIELD-TUNED MODEL RESULTS ON PLANTDOC")
     print("=" * 65)
-    print(f"Total Real Field Images Evaluated : {total_images}")
-    print(f"Top-1 Exact Diagnosis Accuracy    : {top1_acc:.2f}%")
-    print(f"Top-5 Candidate Diagnosis Accuracy: {top5_acc:.2f}%")
-    print(f"Crop Species Recognition Accuracy : {crop_acc:.2f}%")
-    print(f"Healthy vs. Infected Binary Acc   : {health_acc:.2f}%")
-    print(f"Total Evaluation Time             : {elapsed:.1f}s ({elapsed/total_images*1000:.1f} ms/image)")
+    print(f"Total Images Evaluated               : {overall_total}")
+    print(f"Held-out Test Split Top-1 Acc        : {split_results.get('test', {}).get('top1_acc', 0)}% (Top-5: {split_results.get('test', {}).get('top5_acc', 0)}%)")
+    print(f"Overall Dataset Top-1 Acc            : {ov_acc1:.2f}%")
+    print(f"Overall Dataset Top-5 Acc            : {ov_acc5:.2f}%")
+    print(f"Crop Species Recognition Acc         : {ov_crop:.2f}%")
+    print(f"Healthy vs. Diseased Binary Acc      : {ov_health:.2f}%")
+    print(f"Evaluation Time                      : {elapsed:.1f}s ({elapsed/overall_total*1000:.1f} ms/image)")
     print("=" * 65)
 
-    # Save machine-readable report
-    results = {
-        "benchmark_dataset": "PlantDoc (Real Field Conditions)",
-        "source_url": "https://github.com/pratikkayal/PlantDoc-Dataset",
-        "model_architecture": "MobileNetV3-Small (Edge)",
-        "weights_path": "models/crop_disease_mobilenetv3.pth",
-        "total_images_evaluated": total_images,
-        "corrupt_images_skipped": corrupt_images,
-        "top1_exact_accuracy_pct": round(top1_acc, 2),
-        "top5_candidate_accuracy_pct": round(top5_acc, 2),
-        "crop_species_accuracy_pct": round(crop_acc, 2),
-        "health_vs_disease_binary_accuracy_pct": round(health_acc, 2),
-        "evaluation_duration_seconds": round(elapsed, 2),
-        "latency_ms_per_image": round((elapsed / total_images) * 1000, 2) if total_images else 0,
-        "per_class_breakdown": per_class_stats
+    final_report = {
+        "model": "MobileNetV3-Large (Field-Tuned)",
+        "splits": split_results,
+        "overall_total_images": overall_total,
+        "overall_top1_acc": round(ov_acc1, 2),
+        "overall_top5_acc": round(ov_acc5, 2),
+        "overall_crop_acc": round(ov_crop, 2),
+        "overall_health_acc": round(ov_health, 2),
+        "per_class_stats": per_class_stats
     }
 
-    report_path = os.path.join(reports_dir, "plantdoc_accuracy_report.json")
+    report_path = os.path.join(reports_dir, "plantdoc_field_tuned_evaluation.json")
     with open(report_path, "w") as f:
-        json.dump(results, f, indent=2)
-
-    print(f"\n✔ Full benchmark report saved to: {report_path}")
+        json.dump(final_report, f, indent=2)
+    print(f"Report saved to: {report_path}")
 
 if __name__ == "__main__":
     evaluate_plantdoc()

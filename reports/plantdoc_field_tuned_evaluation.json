@@ -1,0 +1,194 @@
+{
+  "model": "MobileNetV3-Large (Field-Tuned)",
+  "splits": {
+    "test": {
+      "total": 231,
+      "top1_acc": 61.04,
+      "top5_acc": 95.24,
+      "crop_acc": 78.35,
+      "health_acc": 93.51
+    },
+    "train": {
+      "total": 2254,
+      "top1_acc": 82.96,
+      "top5_acc": 98.8,
+      "crop_acc": 91.84,
+      "health_acc": 98.31
+    }
+  },
+  "overall_total_images": 2485,
+  "overall_top1_acc": 80.93,
+  "overall_top5_acc": 98.47,
+  "overall_crop_acc": 90.58,
+  "overall_health_acc": 97.87,
+  "per_class_stats": {
+    "Apple Scab Leaf": {
+      "total": 88,
+      "top1": 75,
+      "top5": 87,
+      "crop_ok": 76
+    },
+    "Apple leaf": {
+      "total": 87,
+      "top1": 76,
+      "top5": 86,
+      "crop_ok": 76
+    },
+    "Apple rust leaf": {
+      "total": 86,
+      "top1": 78,
+      "top5": 85,
+      "crop_ok": 82
+    },
+    "Bell_pepper leaf": {
+      "total": 56,
+      "top1": 50,
+      "top5": 56,
+      "crop_ok": 50
+    },
+    "Bell_pepper leaf spot": {
+      "total": 63,
+      "top1": 49,
+      "top5": 63,
+      "crop_ok": 55
+    },
+    "Blueberry leaf": {
+      "total": 109,
+      "top1": 102,
+      "top5": 108,
+      "crop_ok": 102
+    },
+    "Cherry leaf": {
+      "total": 56,
+      "top1": 46,
+      "top5": 56,
+      "crop_ok": 46
+    },
+    "Corn Gray leaf spot": {
+      "total": 64,
+      "top1": 45,
+      "top5": 64,
+      "crop_ok": 63
+    },
+    "Corn leaf blight": {
+      "total": 186,
+      "top1": 157,
+      "top5": 186,
+      "crop_ok": 186
+    },
+    "Corn rust leaf": {
+      "total": 112,
+      "top1": 107,
+      "top5": 112,
+      "crop_ok": 112
+    },
+    "Peach leaf": {
+      "total": 110,
+      "top1": 100,
+      "top5": 110,
+      "crop_ok": 100
+    },
+    "Potato leaf early blight": {
+      "total": 114,
+      "top1": 67,
+      "top5": 114,
+      "crop_ok": 96
+    },
+    "Potato leaf late blight": {
+      "total": 104,
+      "top1": 81,
+      "top5": 103,
+      "crop_ok": 88
+    },
+    "Raspberry leaf": {
+      "total": 118,
+      "top1": 117,
+      "top5": 118,
+      "crop_ok": 117
+    },
+    "Soyabean leaf": {
+      "total": 62,
+      "top1": 55,
+      "top5": 60,
+      "crop_ok": 55
+    },
+    "Squash Powdery mildew leaf": {
+      "total": 128,
+      "top1": 123,
+      "top5": 128,
+      "crop_ok": 123
+    },
+    "Strawberry leaf": {
+      "total": 92,
+      "top1": 84,
+      "top5": 90,
+      "crop_ok": 84
+    },
+    "Tomato Early blight leaf": {
+      "total": 84,
+      "top1": 36,
+      "top5": 79,
+      "crop_ok": 68
+    },
+    "Tomato Septoria leaf spot": {
+      "total": 149,
+      "top1": 134,
+      "top5": 147,
+      "crop_ok": 142
+    },
+    "Tomato leaf": {
+      "total": 62,
+      "top1": 41,
+      "top5": 60,
+      "crop_ok": 45
+    },
+    "Tomato leaf bacterial spot": {
+      "total": 105,
+      "top1": 37,
+      "top5": 100,
+      "crop_ok": 85
+    },
+    "Tomato leaf late blight": {
+      "total": 110,
+      "top1": 81,
+      "top5": 110,
+      "crop_ok": 86
+    },
+    "Tomato leaf mosaic virus": {
+      "total": 54,
+      "top1": 35,
+      "top5": 45,
+      "crop_ok": 46
+    },
+    "Tomato leaf yellow virus": {
+      "total": 75,
+      "top1": 49,
+      "top5": 73,
+      "crop_ok": 72
+    },
+    "Tomato mold leaf": {
+      "total": 85,
+      "top1": 70,
+      "top5": 84,
+      "crop_ok": 78
+    },
+    "grape leaf": {
+      "total": 64,
+      "top1": 62,
+      "top5": 63,
+      "crop_ok": 62
+    },
+    "grape leaf black rot": {
+      "total": 60,
+      "top1": 54,
+      "top5": 60,
+      "crop_ok": 54
+    },
+    "Tomato two spotted spider mites leaf": {
+      "total": 2,
+      "top1": 0,
+      "top5": 0,
+      "crop_ok": 2
+    }
+  }
+}
