@@ -85,7 +85,7 @@ Field photographs taken by farmers have varying angles, harsh midday glare, moti
 
 ### 1. Installation
 ```bash
-git clone https://github.com/Abhinavmamidwar/Bharat-AI-Crop-Disease-Advisory.git
+git clone https://github.com/onkarmamidwar/Bharat-AI-Crop-Disease-Advisory.git
 cd Bharat-AI-Crop-Disease-Advisory
 pip install -r requirements.txt
 ```
