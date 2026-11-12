@@ -6,79 +6,71 @@
   <style>
     @page {
       size: A4 portrait;
-      margin: 18mm 16mm;
+      margin: 14mm 14mm;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #222;
-      line-height: 1.45;
+      line-height: 1.4;
       margin: 0;
       padding: 0;
-      font-size: 13px;
+      font-size: 11.5px;
     }
     .header {
       border-bottom: 3px solid #005a9c;
-      padding-bottom: 12px;
-      margin-bottom: 18px;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
     }
     .badge-bar {
       display: flex;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 6px;
+      margin-bottom: 6px;
     }
     .badge {
       background: #eef2f7;
       color: #005a9c;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     .title {
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 800;
       color: #0b1f35;
-      margin: 0 0 6px 0;
+      margin: 0 0 4px 0;
     }
     .subtitle {
-      font-size: 13px;
+      font-size: 11.5px;
       color: #555;
       margin: 0;
     }
     .meta-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 8px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 6px;
-      padding: 10px 14px;
-      margin-bottom: 20px;
-      font-size: 11.5px;
+      padding: 8px 12px;
+      margin-bottom: 14px;
+      font-size: 11px;
     }
     .meta-item strong {
       display: block;
       color: #64748b;
-      font-size: 10px;
+      font-size: 9.5px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 2px;
     }
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #0b1f35;
-      border-left: 4px solid #f39c12;
-      padding-left: 8px;
-      margin: 18px 0 10px 0;
-    }
     .table-caption {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #111;
-      margin: 14px 0 6px 0;
+      margin: 10px 0 5px 0;
     }
     .table-caption span {
       font-weight: 400;
@@ -87,32 +79,26 @@
     table.benchmark-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 16px;
-      font-size: 12px;
+      margin-bottom: 11px;
+      font-size: 11px;
     }
     table.benchmark-table th {
       background-color: #f39c12;
       color: #000;
       font-weight: 700;
       text-align: left;
-      padding: 7px 12px;
+      padding: 5px 10px;
       border: 1px solid #000;
-      font-size: 12px;
+      font-size: 11px;
     }
     table.benchmark-table th.result-col, table.benchmark-table td.result-col {
       text-align: center;
-      width: 32%;
+      width: 30%;
     }
     table.benchmark-table td {
-      padding: 7px 12px;
+      padding: 5px 10px;
       border: 1px solid #000;
       color: #000;
-    }
-    table.benchmark-table tr:nth-child(even) td {
-      background-color: #ffffff;
-    }
-    table.benchmark-table tr:nth-child(odd) td {
-      background-color: #ffffff;
     }
     table.benchmark-table td.result-col {
       font-weight: 700;
@@ -121,18 +107,18 @@
       background: #f0fdf4;
       border: 1px solid #bbf7d0;
       border-radius: 6px;
-      padding: 10px 14px;
-      margin-top: 14px;
-      font-size: 11.5px;
+      padding: 8px 12px;
+      margin-top: 10px;
+      font-size: 10.5px;
     }
     .info-card strong {
       color: #15803d;
     }
     .footer {
-      margin-top: 24px;
+      margin-top: 14px;
       border-top: 1px solid #cbd5e1;
-      padding-top: 8px;
-      font-size: 10px;
+      padding-top: 6px;
+      font-size: 9.5px;
       color: #64748b;
       display: flex;
       justify-content: space-between;
@@ -171,9 +157,9 @@
     </div>
   </div>
 
-  <!-- TABLE 1: CROP DISEASES -->
+  <!-- TABLE 1: CROP DISEASES (LAB) -->
   <div class="table-caption">
-    Crop diseases <span>(MobileNetV3-Small, 38 PlantVillage species/conditions, confidence threshold 0.20)</span>
+    Crop diseases: Controlled Laboratory Benchmark <span>(MobileNetV3-Small, 38 PlantVillage classes, confidence threshold 0.20)</span>
   </div>
   <table class="benchmark-table">
     <thead>
@@ -210,7 +196,46 @@
     </tbody>
   </table>
 
-  <!-- TABLE 2: INSECT PESTS -->
+  <!-- TABLE 2: PLANTDOC REAL FIELD TEST -->
+  <div class="table-caption">
+    Crop diseases: Real Farm Field Stress Test <span>(Tested across all 2,485 images from https://github.com/pratikkayal/PlantDoc-Dataset)</span>
+  </div>
+  <table class="benchmark-table">
+    <thead>
+      <tr>
+        <th>Measure</th>
+        <th class="result-col">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Standard detection score (Exact condition Top-1, field background)</td>
+        <td class="result-col">17.02%</td>
+      </tr>
+      <tr>
+        <td>Candidate diagnosis found (Top-5 Inclusion Accuracy)</td>
+        <td class="result-col">47.81%</td>
+      </tr>
+      <tr>
+        <td>Healthy vs. Infected leaves correctly distinguished (Binary Recall)</td>
+        <td class="result-col">76.10%</td>
+      </tr>
+      <tr>
+        <td>Crop species correctly identified in natural field environment</td>
+        <td class="result-col">37.30%</td>
+      </tr>
+      <tr>
+        <td>Real field images evaluated (across all 28 classes)</td>
+        <td class="result-col">2,485 images</td>
+      </tr>
+      <tr>
+        <td>On-device evaluation latency per field image (Arm CPU)</td>
+        <td class="result-col">46.5 ms</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TABLE 3: INSECT PESTS -->
   <div class="table-caption">
     Insect pests <span>(YOLOv8n, 102 IP102 species, confidence threshold 0.2)</span>
   </div>
@@ -245,7 +270,7 @@
     </tbody>
   </table>
 
-  <!-- TABLE 3: EDGE HARDWARE BENCHMARKS -->
+  <!-- TABLE 4: EDGE HARDWARE BENCHMARKS -->
   <div class="table-caption">
     Edge SoC Performance &amp; Advisory Engine <span>(Raspberry Pi 5 Arm Cortex-A76 &amp; ExecuTorch Llama 3.2)</span>
   </div>
@@ -285,13 +310,13 @@
   </table>
 
   <div class="info-card">
-    <strong>✔ Field Generalization Note:</strong> Data augmentations including RandomResizedCrop, RandomRotation (25°), ColorJitter (0.25), and GaussianBlur (3x3) ensure robust diagnostic accuracy under real-world agricultural conditions (direct sunlight glare, hand defocus, and leaf angle variation). The reasoning pipeline anchors on verified Indian Council of Agricultural Research (ICAR) practices to ensure zero hallucination in chemical and bio-agent dosage recommendations.
+    <strong>✔ Scientific Note on PlantDoc Domain Shift:</strong> The performance gap between controlled laboratory data (PlantVillage: 95.53%) and in-the-wild farm photographs (PlantDoc: 17.02% Top-1, 47.81% Top-5, 76.10% binary detection) reflects standard academic findings. Real farm images contain heavy occlusion, soil background, and multi-leaf clutter. The dual-stage pipeline uses binary disease screening (76.1%) followed by Top-5 candidate retrieval into Llama 3.2 via ExecuTorch for conversational disambiguation.
   </div>
 
   <div class="footer">
     <span>Bharat AI-SoC Challenge (2026–27) Submission Deliverable</span>
     <span>Repository: github.com/onkarmamidwar/Bharat-AI-Crop-Disease-Advisory</span>
-    <span>Generated: 12 November 2026</span>
+    <span>Lead: Onkar Mamidwar</span>
   </div>
 
 </body>
